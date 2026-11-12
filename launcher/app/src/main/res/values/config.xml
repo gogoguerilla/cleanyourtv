@@ -310,10 +310,17 @@
     <bool name="dock_row">true</bool>
     <!-- Inputs, Wi-Fi and Settings folded into one round gear at the top right, like Google TV: OK drops a menu
          with the three, hold OK keeps the launcher menu. Off by default; a theme can set "top_menu": true. -->
-    <bool name="top_menu">false</bool>
+    <bool name="top_menu">true</bool>
     <!-- A direct Launcher settings action instead of TV Settings in the header (or top_menu).
          Off by default; a theme can set "launcher_settings_button": true. -->
     <bool name="launcher_settings_button">false</bool>
+    <!-- With top_menu (and launcher_settings_button off): a Launcher settings row in the gear's menu, above the
+         TV's Settings, so both are one click away. -->
+    <bool name="top_menu_launcher_settings">true</bool>
+    <!-- A small pill before Settings with the weather icon and temperature, read from the weather-pill add-on's
+         content provider (the Weather pill add-on); the launcher itself has no network. Hidden while the add-on is not
+         installed or has no recent reading. Empty: no pill. -->
+    <string name="weather_pill_authority" translatable="false">io.github.gogoguerilla.weatherpill.now</string>
     <!-- The dock band as light frosted glass, like the Inputs, Wi-Fi and Settings pills, so a sky or wallpaper shows
          through it. false (the default) keeps the solid near-black band, or the cinematic shelf's dark glass. Can
          also be set with "dock_glass": true in a theme's config.json. -->
@@ -400,8 +407,8 @@
          "night": [...]}. While set, the rotation picks only from the group that fits now: morning from sunrise to
          noon, evening until half an hour after sunset, night the rest, with the sun at latitude and longitude (07:00
          and 18:30 without them). It moves to the new group as soon as the time of day changes. A missing or empty
-         group falls back to the whole collection; empty rotates through every picture. A theme can set
-         "wallpaper_moods" as an object. -->
+         group falls back to the whole collection; empty rotates through every picture. An optional "overnight"
+         group takes midnight to sunrise from night. A theme can set "wallpaper_moods" as an object. -->
     <string name="wallpaper_moods" translatable="false"></string>
     <!-- Hold OK on a tile opens a small menu: Move (picks the tile up for reordering), Remove from Home (only with
          app_library) and App info. On by default since 3.3; false keeps the old behaviour: holding OK opens the app's
@@ -418,7 +425,7 @@
 
     <!-- Tiles per row in the grid; the dock always has this many slots. Tiles are 180dp wide at 4 columns and
          shrink to fit from 5 up (about 144dp at 5, 117dp at 6 on a 1080p TV). -->
-    <integer name="columns">4</integer>
+    <integer name="columns">5</integer>
 
     <!-- Basic motion is on; advanced effects are opt-in in the launcher's own Settings screen. -->
     <bool name="animations">true</bool>
@@ -557,6 +564,8 @@
          faint outer glow), rim (the crisp rim alone, no sheen, fill or glow, for a quiet focus over a wallpaper) or
          halo (the rim with a lighter outer glow). Can also be set with "glass_style": "rim" in a theme's config.json. -->
     <string name="glass_style" translatable="false">glass</string>
+    <!-- Width of the white rim around the focused tile's glass (glass_style glass). -->
+    <dimen name="glass_rim_width">1dp</dimen>
 
     <!-- Tiles drawn from the app's icon and name instead of its banner (for banners that crop badly). -->
     <string-array name="icon_tiles" translatable="false">

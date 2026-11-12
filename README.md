@@ -2,6 +2,24 @@
   <a href="https://cleanyour.tv"><img src="https://raw.githubusercontent.com/Gathin23/cleanyourtv/main/docs/banner.png" alt="CleanYourTV. Your TV, minus the ads. Strip the bloatware from any Android TV or Google TV over Wi-Fi and replace the ad-filled home screen with a clean launcher that looks like an Apple TV. No root, no cable, nothing uninstalled, and a one-line restore." width="800"></a>
 </p>
 
+## About this fork
+
+This is [@gogoguerilla](https://github.com/gogoguerilla)'s fork of
+[Gathin23/cleanyourtv](https://github.com/Gathin23/cleanyourtv), tested on a Sony BRAVIA 4K GB (Android TV 9).
+Everything below describes the original project; this fork adds:
+
+- **A weather pill** beside the Settings gear: a grey line icon and the temperature, from the
+  [Weather pill add-on](addons/weather-pill/), which fetches from Open-Meteo. The launcher itself still has no
+  network access, and the pill stays hidden without the add-on.
+- **Time-of-day wallpapers with an overnight slot**: morning, day, evening and overnight (midnight to sunrise),
+  switching at your local sunrise and sunset. [PROMPT.md](PROMPT.md) asks for your city and where to drop
+  your pictures; a single picture is simply used as the wallpaper.
+- **Launcher settings in the gear menu**: Inputs, Network, Reorder apps, Launcher settings and Settings.
+- **A thinner focus rim** (1dp) and **5 columns** by default, with the gear menu (`top_menu`) on.
+
+To use it, paste [PROMPT.md](PROMPT.md) into your coding assistant as in the original; it clones this fork.
+Your city and pictures stay on your own computer and are never committed.
+
 <p align="center">
   Read in: <a href="README.he.md" lang="he" dir="rtl">עברית</a> · <a href="README.zh-CN.md">简体中文</a> · <a href="README.zh-TW.md">正體中文</a> · <a href="README.vi.md">Tiếng Việt</a> · <a href="README.ja.md">日本語</a> · <a href="README.it.md">Italiano</a> · <a href="README.pt-BR.md">Português</a> · <a href="README.nl.md">Nederlands</a> · <a href="README.de.md">Deutsch</a> · <a href="README.uk.md">Українська</a> · <a href="README.tr.md">Türkçe</a> · <a href="README.uz.md">Oʻzbekcha</a> · <a href="README.fr.md">Français</a> · <a href="README.es.md">Español</a>
 </p>

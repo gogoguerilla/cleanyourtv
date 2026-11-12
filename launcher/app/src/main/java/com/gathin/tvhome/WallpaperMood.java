@@ -10,13 +10,14 @@ import java.util.Set;
 
 /**
  * wallpaper_moods: which group of a rotating wallpaper collection fits the time of day. Morning from sunrise to noon,
- * evening until half an hour after sunset, night the rest. The sun is the one at config.xml's latitude and longitude,
+ * evening until half an hour after sunset, night the rest. A theme with an "overnight" group splits night at midnight:
+ * overnight runs from midnight to sunrise, and a theme without one keeps night there. The sun is the one at config.xml's latitude and longitude,
  * worked out offline by {@link Sun} as the sky does, or 07:00 and 18:30 without a place. A group that is missing, or
  * has none of the collection's pictures, falls back to the whole collection.
  */
 final class WallpaperMood {
-    static final String MORNING = "morning", EVENING = "evening", NIGHT = "night";
-    static final String[] ALL = {MORNING, EVENING, NIGHT};
+    static final String MORNING = "morning", EVENING = "evening", NIGHT = "night", OVERNIGHT = "overnight";
+    static final String[] ALL = {MORNING, EVENING, NIGHT, OVERNIGHT};
     /** Sunrise and sunset in minutes of the day, without a place (or where the sun does not rise or set that day). */
     static final int DEFAULT_SUNRISE = 7 * 60, DEFAULT_SUNSET = 18 * 60 + 30;
     private static final int NOON = 12 * 60;
@@ -31,6 +32,12 @@ final class WallpaperMood {
         if (minute >= sunrise && minute < NOON) return MORNING;
         if (minute >= NOON && minute < sunset + DUSK_MINUTES) return EVENING;
         return NIGHT;
+    }
+
+    /** timeOfDay, with midnight to sunrise as OVERNIGHT when the theme has an overnight group. */
+    static String timeOfDay(int minute, int sunrise, int sunset, Map<String, Set<String>> groups) {
+        String mood = timeOfDay(minute, sunrise, sunset);
+        return NIGHT.equals(mood) && minute < sunrise && groups.containsKey(OVERNIGHT) ? OVERNIGHT : mood;
     }
 
     /** That day's {sunrise, sunset} at config.xml's latitude and longitude; the defaults when either is unusable. */

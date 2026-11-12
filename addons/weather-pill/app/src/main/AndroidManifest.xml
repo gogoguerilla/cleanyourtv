@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-feature android:name="android.software.leanback" android:required="false" />
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+
+    <!-- Open-Meteo, for the current temperature and condition at one fixed place. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="false"
+        android:label="Weather pill">
+        <!-- Read by the launcher's weather pill (weather_pill_authority). Nothing else runs: no activity, no
+             service, no job. A fetch happens only inside a query, when the cached reading is over 30 minutes old. -->
+        <provider
+            android:name=".NowProvider"
+            android:authorities="io.github.gogoguerilla.weatherpill.now"
+            android:exported="true" />
+    </application>
+</manifest>

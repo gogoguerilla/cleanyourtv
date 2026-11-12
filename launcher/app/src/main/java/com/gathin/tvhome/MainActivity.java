@@ -436,6 +436,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     };
     /** Keeps the Home clocks moving on Android before 12 when the firmware stops ACTION_TIME_TICK (see ClockRefresh). */
     private ClockRefresh clockRefresh;
+    /** weather_pill_authority: the weather pill beside Settings, or null. */
+    private WeatherPill weatherPill;
     private final Runnable minuteTick = new Runnable() {
         @Override
         public void run() {
@@ -446,6 +448,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             if (festive) updateWifiLabel();
             sky.update();
             wallpaperPlayer.update();
+            if (weatherPill != null) weatherPill.refresh();
             handler.postDelayed(this, MINUTE_MS);
         }
     };
@@ -896,6 +899,20 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             showSettingsMenu();
             return true;
         });
+        String weatherAuthority = getString(R.string.weather_pill_authority);
+        if (!weatherAuthority.isEmpty()) {
+            // A plain pill before Settings, not focusable: it only shows the weather.
+            TextView pill = new TextView(this, null, 0, R.style.TopButton);
+            pill.setFocusable(false);
+            pill.setClickable(false);
+            pill.setVisibility(View.GONE);
+            LinearLayout.LayoutParams plp = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT, Math.round(42 * density));
+            plp.setMarginStart(Math.round(10 * density));
+            ViewGroup bar = (ViewGroup) btnSettings.getParent();
+            bar.addView(pill, bar.indexOfChild(btnSettings), plp);
+            weatherPill = new WeatherPill(this, pill, weatherAuthority);
+        }
 
         // Keep focus on the top bar at its ends and at the top: Android's focus finder would otherwise
         // jump to a tile far below when there is nothing in that direction.
@@ -1140,6 +1157,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         sky.update();
         wallpaperPlayer.start();
         handler.postDelayed(minuteTick, MINUTE_MS);
+        if (weatherPill != null) weatherPill.refresh();
         if (festive && lamp != null) {
             lamp.start();
             LocalDate today = LocalDate.now();
@@ -3700,6 +3718,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             addInputRow(rows, popup, R.drawable.ic_home_settings_pill, getString(R.string.launcher_settings), -1,
                     () -> startActivityForResult(new Intent(this, LauncherSettingsActivity.class), LAUNCHER_SETTINGS_REQUEST));
         } else {
+            // top_menu_launcher_settings: Launcher settings gets its own row above the TV's Settings.
+            if (getResources().getBoolean(R.bool.top_menu_launcher_settings)) {
+                addInputRow(rows, popup, R.drawable.ic_home_settings_pill, getString(R.string.launcher_settings), -1,
+                        () -> startActivityForResult(new Intent(this, LauncherSettingsActivity.class), LAUNCHER_SETTINGS_REQUEST));
+            }
             addInputRow(rows, popup, R.drawable.ic_settings, getString(R.string.settings), -1,
                     () -> open(systemIntent(Settings.ACTION_SETTINGS)));
         }

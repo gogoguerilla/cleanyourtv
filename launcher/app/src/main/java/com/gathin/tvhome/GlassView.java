@@ -28,6 +28,8 @@ public class GlassView extends View {
     private int glowAlpha = 0x30;
     /** glass_style rim or halo: no sheen and no fill, only the crisp rim (and, for halo, a lighter outer glow). */
     private boolean flat;
+    /** The glass slab's rim, config.xml's glass_rim_width (1.5dp unless a TV's config.xml sets it). */
+    private float rimWidth;
     private boolean halo;
 
     public GlassView(Context context, AttributeSet attrs) {
@@ -35,7 +37,8 @@ public class GlassView extends View {
         density = getResources().getDisplayMetrics().density;
         radius = 20f * density;
         rim.setStyle(Paint.Style.STROKE);
-        rim.setStrokeWidth(1.5f * density);
+        rimWidth = getResources().getDimension(R.dimen.glass_rim_width);
+        rim.setStrokeWidth(rimWidth);
         rim.setColor(0xCCFFFFFF);
         glow.setStyle(Paint.Style.STROKE);
         // Cache the slab as a texture. The spring only changes translation, so the GPU can
@@ -65,7 +68,7 @@ public class GlassView extends View {
     void setStyle(String style) {
         flat = Config.GLASS_RIM.equals(style) || Config.GLASS_HALO.equals(style);
         halo = Config.GLASS_HALO.equals(style);
-        rim.setStrokeWidth((flat ? 2f : 1.5f) * density);
+        rim.setStrokeWidth(flat ? 2f * density : rimWidth);
         invalidate();
     }
 

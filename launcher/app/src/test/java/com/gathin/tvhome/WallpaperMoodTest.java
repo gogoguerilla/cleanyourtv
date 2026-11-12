@@ -38,6 +38,19 @@ public class WallpaperMoodTest {
     }
 
     @Test
+    public void overnightRunsFromMidnightToSunriseOnlyWithItsGroup() {
+        Map<String, Set<String>> groups = new HashMap<>();
+        groups.put(WallpaperMood.NIGHT, Collections.singleton("n.jpg"));
+        assertEquals(WallpaperMood.NIGHT, WallpaperMood.timeOfDay(30, RISE, SET, groups));   // no overnight group
+        groups.put(WallpaperMood.OVERNIGHT, Collections.singleton("o.jpg"));
+        assertEquals(WallpaperMood.OVERNIGHT, WallpaperMood.timeOfDay(0, RISE, SET, groups));
+        assertEquals(WallpaperMood.OVERNIGHT, WallpaperMood.timeOfDay(RISE - 1, RISE, SET, groups));
+        assertEquals(WallpaperMood.MORNING, WallpaperMood.timeOfDay(RISE, RISE, SET, groups));
+        assertEquals(WallpaperMood.EVENING, WallpaperMood.timeOfDay(15 * 60, RISE, SET, groups));
+        assertEquals(WallpaperMood.NIGHT, WallpaperMood.timeOfDay(23 * 60 + 59, RISE, SET, groups));
+    }
+
+    @Test
     public void sunComesFromTheConfiguredPlaceOrTheDefaults() {
         LocalDate day = LocalDate.of(2026, 10, 22);
         ZoneId zone = ZoneId.of("America/Los_Angeles");

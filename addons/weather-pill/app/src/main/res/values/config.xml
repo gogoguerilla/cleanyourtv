@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The place the weather is for, in decimal degrees (two decimals is plenty: about 1 km). Set these to the
+         TV owner's city before building; while either is empty the add-on fetches nothing and the pill stays hidden.
+         PROMPT.md asks for the place. -->
+    <string name="latitude" translatable="false"></string>
+    <string name="longitude" translatable="false"></string>
+    <!-- fahrenheit or celsius -->
+    <string name="unit" translatable="false">fahrenheit</string>
+</resources>

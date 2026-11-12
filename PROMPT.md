@@ -20,7 +20,7 @@ My TV model is: <MODEL NAME HERE>. Work on the real device, step by step, and ve
 do with screenshots pulled from the TV. Ask me before anything that depends on my preferences.
 Where these steps name a file under `tools/`, `docs/` or `examples/` that is not in your working
 folder, you are running without this repo: clone it first with
-`git clone https://github.com/Gathin23/cleanyourtv` and work from there, so `tools/disable.sh` and the
+`git clone https://github.com/gogoguerilla/cleanyourtv` and work from there, so `tools/disable.sh` and the
 rest keep their safety checks, rather than stopping or writing your own.
 
 Connect
@@ -193,6 +193,26 @@ Launcher
 - Ask how many dock slots I want (4, 5, 6 or 7), which apps, and their order; keep four if I have no
   preference. The reference launcher already supports this: use `columns` and `dock_apps` in
   `launcher/app/src/main/res/values/config.xml` or a theme's `config.json`, without adding a new layout.
+- Ask for my city or postcode, for the weather pill beside the Settings gear and for sunrise and sunset
+  times (I can skip this). Turn it into latitude and longitude with two decimals, from what you know or
+  Open-Meteo's geocoding (`https://geocoding-api.open-meteo.com/v1/search?name=<city>`), and ask whether I want
+  °F or °C. Put them in `latitude` and `longitude` in `launcher/app/src/main/res/values/config.xml`, and in
+  `latitude`, `longitude` and `unit` in `addons/weather-pill/app/src/main/res/values/config.xml`, then build
+  and install that add-on as its README says; the pill shows up within a minute. These are my location: keep
+  them in my working copy only, never commit or publish them. If I skip, leave both empty and don't install
+  the add-on: the pill stays hidden and the wallpapers switch at 07:00 and 18:30.
+- Ask whether I want my own wallpapers. Tell me to put the pictures in `my-wallpapers/` at the top of this
+  folder (it is ignored by git), landscape JPG or PNG, ideally 1920x1080, named for the time each one
+  shows: `morning.jpg` (sunrise to noon), `day.jpg` (noon to half an hour after sunset), `evening.jpg` (then
+  to midnight) and `overnight.jpg` (midnight to sunrise). Copy `themes/cinematic` to `work/theme/`,
+  centre-crop each picture to 1920x1080 into `work/theme/wallpapers/`, delete `work/theme/wallpaper.jpg`,
+  and set in its `config.json` `"wallpaper_moods": {"morning": ["morning.jpg"], "evening": ["day.jpg"],
+  "night": ["evening.jpg"], "overnight": ["overnight.jpg"]}`, listing only the pictures I gave, with
+  `"wallpaper_rotation_minutes": 1` and `"clock_wallpaper": true` so the clock screensaver shows the same
+  picture. If I give only one picture, whatever its name, use just that one: crop it to
+  `work/theme/wallpaper.jpg`, with no `wallpapers/` folder and no `wallpaper_moods`. Push the theme with
+  `TV_HOST=<tv ip> tools/theme.sh work/theme` and screenshot Home. A picture that makes the clock hard to
+  read can be darkened, or the whole theme dimmed with `wallpaper_dim`.
 - Design, Apple TV 4K style: pitch black background; a dock row at the bottom of the screen inside a
   slightly lighter rounded band holding the apps I pick; the rest of the apps in a grid with the same
   number of columns below that scrolls up when I press Down; one translucent "glass" highlight
@@ -231,5 +251,6 @@ Verify
 
 ---
 
-Expect to answer three or four checklist questions (which apps you use, the dock size and app order,
-whether to keep the voice assistant, Chromecast and firmware updates). Everything is reversible.
+Expect to answer five or six checklist questions (which apps you use, the dock size and app order,
+whether to keep the voice assistant, Chromecast and firmware updates, your city for the weather, and
+your own wallpapers). Everything is reversible.
