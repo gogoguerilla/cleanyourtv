@@ -16,6 +16,9 @@ Everything below describes the original project; this fork adds:
   your pictures; a single picture is simply used as the wallpaper.
 - **Launcher settings in the gear menu**: Inputs, Network, Reorder apps, Launcher settings and Settings.
 - **A thinner focus rim** (1dp) and **5 columns** by default, with the gear menu (`top_menu`) on.
+- **A note on ad-blocking DNS**: with Private DNS on AdGuard DNS, resuming an episode in Paramount+ sat on a black
+  screen with a spinner until a promo played, because its ad server was blocked. Setting Private DNS back to
+  Automatic fixed it, so this fork's TV runs without the ad-blocking DNS.
 
 To use it, paste [PROMPT.md](PROMPT.md) into your coding assistant as in the original; it clones this fork.
 Your city and pictures stay on your own computer and are never committed.

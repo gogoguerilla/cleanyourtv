@@ -9,7 +9,8 @@ the temperature. This add-on fetches the weather; the launcher shows it (`weathe
 - **Data** comes from [Open-Meteo](https://open-meteo.com/), which needs no account or key.
 - **No background work.** There is no screen, service, job or boot receiver. The launcher asks for the weather
   once a minute while Home is on screen, and the add-on fetches only when its last reading is over 30 minutes
-  old (5 minutes after a failure). A reading over 3 hours old is not shown: the pill hides.
+  old (a minute after a failure), and waits up to 5 seconds for that fetch so the pill shows at once, even
+  straight after a restart. A reading over 3 hours old is not shown: the pill hides.
 - **Icons**: sun, moon, partly cloudy (day and night), cloudy, fog, drizzle, rain, snow and thunderstorm, as white
   line art that the launcher tints like its other pills. From [Feather](https://feathericons.com/) (MIT) and
   [Lucide](https://lucide.dev/) (ISC); fog is drawn here.

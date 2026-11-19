@@ -21,11 +21,13 @@ import java.nio.charset.StandardCharsets;
  * last one is over three hours old, so the pill hides rather than show old weather.
  *
  * There is no background work: a query whose reading is over 30 minutes old starts one fetch from Open-Meteo on a
- * thread and answers with what it has. The launcher asks again each minute while Home is on screen, and picks up
- * the new reading then.
+ * thread, waits up to WAIT_MS for it, and answers with what it has. A failed fetch is retried after RETRY_MS, on a
+ * later query: the launcher asks each minute while Home is on screen.
  */
 public class NowProvider extends ContentProvider {
-    private static final long FRESH_MS = 30 * 60_000L, RETRY_MS = 5 * 60_000L, MAX_AGE_MS = 3 * 3_600_000L;
+    private static final long FRESH_MS = 30 * 60_000L, RETRY_MS = 60_000L, MAX_AGE_MS = 3 * 3_600_000L;
+    /** How long a query waits for the fetch it started, so a stale or missing reading is replaced on this query. */
+    private static final long WAIT_MS = 5_000L;
     private static volatile boolean fetching;
     private static volatile long lastTry;
 
@@ -50,7 +52,16 @@ public class NowProvider extends ContentProvider {
         if (now - at > FRESH_MS && !fetching && now - lastTry > RETRY_MS) {
             fetching = true;
             lastTry = now;
-            new Thread(this::fetch, "weather-pill").start();
+            Thread t = new Thread(this::fetch, "weather-pill");
+            t.start();
+            // The launcher queries off its UI thread, so waiting here is fine. Without it a pill hidden after boot
+            // or a long time away from Home stays hidden until the launcher's next query, a minute later.
+            try {
+                t.join(WAIT_MS);
+            } catch (InterruptedException ignored) {
+                Thread.currentThread().interrupt();
+            }
+            at = p.getLong("at", 0);
         }
         if (at > 0 && now - at < MAX_AGE_MS) c.addRow(new Object[]{p.getString("temp", ""), p.getInt("icon", 0)});
         return c;
@@ -68,7 +79,7 @@ public class NowProvider extends ContentProvider {
             prefs().edit().putLong("at", System.currentTimeMillis()).putString("temp", temp + "°")
                     .putInt("icon", icon).apply();
         } catch (Exception ignored) {
-            // no network or an odd answer: keep the last reading, try again in RETRY_MS
+            // no network or an odd answer: keep the last reading, try again after RETRY_MS
         } finally {
             fetching = false;
         }
